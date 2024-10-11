@@ -1,0 +1,13 @@
+C:\Users\Christian\dev\paperClip\paperClip\bin\Debug\paperClip.exe.config
+C:\Users\Christian\dev\paperClip\paperClip\bin\Debug\paperClip.exe
+C:\Users\Christian\dev\paperClip\paperClip\bin\Debug\paperClip.pdb
+C:\Users\Christian\dev\paperClip\paperClip\bin\Debug\SharpClipboard.dll
+C:\Users\Christian\dev\paperClip\paperClip\bin\Debug\SharpClipboard.xml
+C:\Users\Christian\dev\paperClip\paperClip\obj\Debug\paperClip.csproj.AssemblyReference.cache
+C:\Users\Christian\dev\paperClip\paperClip\obj\Debug\paperClip.Form1.resources
+C:\Users\Christian\dev\paperClip\paperClip\obj\Debug\paperClip.Properties.Resources.resources
+C:\Users\Christian\dev\paperClip\paperClip\obj\Debug\paperClip.csproj.GenerateResource.cache
+C:\Users\Christian\dev\paperClip\paperClip\obj\Debug\paperClip.csproj.CoreCompileInputs.cache
+C:\Users\Christian\dev\paperClip\paperClip\obj\Debug\paperClip.csproj.Up2Date
+C:\Users\Christian\dev\paperClip\paperClip\obj\Debug\paperClip.exe
+C:\Users\Christian\dev\paperClip\paperClip\obj\Debug\paperClip.pdb
