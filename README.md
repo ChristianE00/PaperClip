@@ -3,7 +3,7 @@ Note, this application is still in progress. The current version does not work.
 # Progress
 
 ### 10/11/2024
-- [x] Get current clipboard contetn
+- [x] Get current clipboard content
 - [x] Dynamically create textboxes
 - [x] Dynamically position textboxes
 
