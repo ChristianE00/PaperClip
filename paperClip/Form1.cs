@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -16,7 +17,8 @@ namespace paperClip
     {
         private SharpClipboard clipboard;
         private TextBox clipboardTextBox;
-        private Panel scrollablePanel;
+        private FlowLayoutPanel flowLayoutPanel;
+        private ArrayList textBoxList = new ArrayList();
 
         public Form1()
         {
@@ -28,11 +30,13 @@ namespace paperClip
             clipboard = new SharpClipboard();
             clipboard.ClipboardChanged += ClipboardChanged;
 
-            // Initialize Panel
-            scrollablePanel = new Panel();
-            scrollablePanel.AutoScroll = true;
-            scrollablePanel.Dock = DockStyle.Fill; // Make the panel fill the form
-            this.Controls.Add(scrollablePanel);
+            // Initialize FlowLayoutPanel
+            flowLayoutPanel = new FlowLayoutPanel();
+            flowLayoutPanel.FlowDirection = FlowDirection.TopDown;
+            flowLayoutPanel.WrapContents = false;
+            flowLayoutPanel.AutoScroll = true;
+            flowLayoutPanel.Dock = DockStyle.Fill; // Make the panel fill the form
+            this.Controls.Add(flowLayoutPanel);
 
             // Initialize TextBox
             clipboardTextBox = new TextBox();
@@ -41,36 +45,61 @@ namespace paperClip
             clipboardTextBox.Multiline = true;
             clipboardTextBox.WordWrap = true;
             clipboardTextBox.ScrollBars = ScrollBars.Vertical;
-            clipboardTextBox.Location = new Point(10, 10); // Adjust the location as needed
-            clipboardTextBox.Width = scrollablePanel.Width - 20; // Adjust the width as needed
-            clipboardTextBox.Height = scrollablePanel.Height - 20; // Adjust the height as needed
-            scrollablePanel.Controls.Add(clipboardTextBox);
+            clipboardTextBox.Width = flowLayoutPanel.ClientSize.Width - 20; // Adjust the width as needed
+            //clipboardTextBox.Height = 100; // Set a fixed height for the TextBox
+            flowLayoutPanel.Controls.Add(clipboardTextBox);
 
             // Handle form resize to adjust TextBox size
             this.Resize += new EventHandler(Form1_Resize);
         }
+        private void CreateNewTextBox(string text)
+        {
+            TextBox tBox = new TextBox();
+            tBox.ReadOnly = true;
+            tBox.BorderStyle = BorderStyle.None;
+            tBox.Multiline = true;
+            tBox.WordWrap = true;
+            tBox.ScrollBars = ScrollBars.Vertical;
+            tBox.Width = flowLayoutPanel.ClientSize.Width - 20; // Adjust the width as needed
+            tBox.Height = generateTextBoxHeight(text, tBox); // Set a fixed height for the TextBox
+            tBox.Text = text;
+            flowLayoutPanel.Controls.Add(tBox);
+            textBoxList.Add(tBox);
+        }
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            // Load the first textbox
             string clipboardText = Clipboard.GetText();
+            clipboardTextBox.Height = generateTextBoxHeight(clipboardTextBox.Text, clipboardTextBox);
             clipboardTextBox.Text = "Your current clipboard item: " + clipboardText;
         }
 
         private void ClipboardChanged(object sender, ClipboardChangedEventArgs e)
-        // NOTE: This not safe for non-text clipboard data
-        
-        //if (e.ContentType == SharpClipboard.ContentTypes.Text)
-        //{
+        {
+            // NOTE: This is not safe for non-text clipboard data
+            if (e.ContentType == SharpClipboard.ContentTypes.Text)
+            {
                 string clipboardText = clipboard.ClipboardText;
                 Console.WriteLine("Clipboard Text: " + clipboardText);
+                int height = generateTextBoxHeight(clipboardText, clipboardTextBox);
+                clipboardTextBox.Height = height;
                 clipboardTextBox.Text = "Clipboard Text: " + clipboardText;
-            //}
+                
+            }
+        }
+
+        private int generateTextBoxHeight(string text, TextBox box)
+        {
+            int height = TextRenderer.MeasureText(text, clipboardTextBox.Font, new Size(clipboardTextBox.Width, 0),
+                    TextFormatFlags.WordBreak | TextFormatFlags.TextBoxControl).Height;
+            height = (height > flowLayoutPanel.ClientSize.Height) ? flowLayoutPanel.ClientSize.Height - 10 : height;
+            return height;
         }
 
         private void Form1_Resize(object sender, EventArgs e)
         {
-            clipboardTextBox.Width = scrollablePanel.Width - 20;
-            clipboardTextBox.Height = scrollablePanel.Height - 20;
+            clipboardTextBox.Width = flowLayoutPanel.ClientSize.Width - 20;
         }
     }
 }

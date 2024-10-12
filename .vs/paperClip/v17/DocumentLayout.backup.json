@@ -40,7 +40,7 @@
               "RelativeDocumentMoniker": "paperClip\\Form1.cs",
               "ToolTip": "C:\\Users\\Christian\\dev\\paperClip\\paperClip\\Form1.cs",
               "RelativeToolTip": "paperClip\\Form1.cs",
-              "ViewState": "AgIAAAwAAAAAAAAAAAAmwCkAAAABAAAAAAAAAA==",
+              "ViewState": "AgIAAEMAAAAAAAAAAAAmwFQAAAArAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-10-11T20:15:11.12Z",
               "EditorCaption": ""
@@ -54,8 +54,7 @@
               "ToolTip": "C:\\Users\\Christian\\dev\\paperClip\\paperClip\\Form1.cs [Design]",
               "RelativeToolTip": "paperClip\\Form1.cs [Design]",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-11T20:15:09.432Z",
-              "EditorCaption": " [Design]"
+              "WhenOpened": "2024-10-11T20:15:09.432Z"
             },
             {
               "$type": "Document",
@@ -67,8 +66,7 @@
               "RelativeToolTip": "paperClip\\Form1.Designer.cs",
               "ViewState": "AgIAAAIAAAAAAAAAAAAywAkAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-11T20:11:13.89Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-10-11T20:11:13.89Z"
             },
             {
               "$type": "Document",
@@ -80,8 +78,7 @@
               "RelativeToolTip": "paperClip\\Program.cs",
               "ViewState": "AgIAAAYAAAAAAAAAAAAAABAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-11T20:09:13.52Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-10-11T20:09:13.52Z"
             }
           ]
         }
