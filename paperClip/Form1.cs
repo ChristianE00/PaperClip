@@ -10,7 +10,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using WK.Libraries.SharpClipboardNS;
+using System.Data.SQLite;
+using System.IO;
 using static WK.Libraries.SharpClipboardNS.SharpClipboard;
+using System.Drawing.Text;
 
 namespace paperClip
 {
@@ -19,13 +22,21 @@ namespace paperClip
         private SharpClipboard clipboard;
         private FlowLayoutPanel flowLayoutPanel;
         private ArrayList textBoxList = new ArrayList();
+        private DatabaseHelper _dbHelper;
 
         public Form1()
         {
+
             InitializeComponent();
+
+            // Load database
+            _dbHelper = new DatabaseHelper("ClipboardHistory.db");
+            _dbHelper.CreateDatabase();
+            _dbHelper.CreateTables();
+            
             this.Load += new EventHandler(Form1_Load);
             this.Resize += new EventHandler(Form1_Resize); // Add this line
-            this.BackColor = Color.FromArgb(28, 28 , 28); // Dark background
+            this.BackColor = Color.FromArgb(28, 28, 28); // Dark background
             this.Padding = new Padding(10);
             //this.FormBorderStyle = FormBorderStyle.None; // No border
 
@@ -192,6 +203,74 @@ namespace paperClip
         }
     }
 
+    // SQLite
+    public class DatabaseHelper
+    {
+        private string _dbFilePath;
 
+        public DatabaseHelper(string dbName)
+        {
+            _dbFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, dbName);
 
+        }
+
+        public void CreateDatabase()
+        {
+            if (!File.Exists(_dbFilePath))
+            {
+                SQLiteConnection.CreateFile(_dbFilePath);
+            }
+        }
+
+        public void CreateTables()
+        {
+            string connectionString = $"Data Source={_dbFilePath};version=3;";
+
+            using (var connection = new SQLiteConnection(connectionString))
+            {
+                connection.Open();
+
+                string createTableQuery = @"
+                    CREATE TABLE IF NOT EXISTS ClipboardHistory (
+                        Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        ClipboardText TEXT NOT NULL,
+                        DateTimeCopied DATETIME DEFAULT CURRENT_TIMESTAMP,
+                        Position INTEGER NOT NULL
+                    )";
+
+                using (var command = new SQLiteCommand(createTableQuery, connection))
+                {
+                    command.ExecuteNonQuery();
+
+                }
+            }
+
+        }
+
+        public void InsertClipboardText(string clipboardTest, int position)
+        {
+            string connectionString = $"Data Source={_dbFilePath};version=3;";
+
+            using (var connection = new SQLiteConnection(connectionString))
+            {
+                connection.Open();
+
+                string insertQuery = @"
+                    INSERT INTO ClipboardHistory (ClipboardText, DateTimeCopied, Position)
+                    VALUES (@ClipboardText, @DateTimeCopied, @Position)
+                ";
+
+                using (var command = new SQLiteCommand(insertQuery, connection))
+                {
+                    command.Parameters.AddWithValue("@ClipboardText", clipboardTest);
+                    command.Parameters.AddWithValue("@DateTimeCopied", DateTime.Now);
+                    command.Parameters.AddWithValue("@Position", position);
+
+                    command.ExecuteNonQuery();
+                }
+            }
+
+        }
     }
+
+}

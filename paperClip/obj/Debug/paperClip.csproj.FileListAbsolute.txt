@@ -11,3 +11,11 @@ C:\Users\Christian\dev\paperClip\paperClip\obj\Debug\paperClip.csproj.CoreCompil
 C:\Users\Christian\dev\paperClip\paperClip\obj\Debug\paperClip.csproj.Up2Date
 C:\Users\Christian\dev\paperClip\paperClip\obj\Debug\paperClip.exe
 C:\Users\Christian\dev\paperClip\paperClip\obj\Debug\paperClip.pdb
+C:\Users\Christian\dev\paperClip\paperClip\bin\Debug\EntityFramework.dll
+C:\Users\Christian\dev\paperClip\paperClip\bin\Debug\EntityFramework.SqlServer.dll
+C:\Users\Christian\dev\paperClip\paperClip\bin\Debug\System.Data.SQLite.dll
+C:\Users\Christian\dev\paperClip\paperClip\bin\Debug\System.Data.SQLite.EF6.dll
+C:\Users\Christian\dev\paperClip\paperClip\bin\Debug\System.Data.SQLite.Linq.dll
+C:\Users\Christian\dev\paperClip\paperClip\bin\Debug\EntityFramework.xml
+C:\Users\Christian\dev\paperClip\paperClip\bin\Debug\EntityFramework.SqlServer.xml
+C:\Users\Christian\dev\paperClip\paperClip\bin\Debug\System.Data.SQLite.xml
