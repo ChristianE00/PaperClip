@@ -26,6 +26,7 @@ namespace paperClip
             this.Load += new EventHandler(Form1_Load);
             this.Resize += new EventHandler(Form1_Resize); // Add this line
             this.BackColor = Color.FromArgb(28, 28 , 28); // Dark background
+            this.Padding = new Padding(10);
             //this.FormBorderStyle = FormBorderStyle.None; // No border
 
             // Initialize SharpClipboard
@@ -100,11 +101,13 @@ namespace paperClip
         public int flowLayoutPanelHeight;
         public int flowLayoutPanelWidth;
         public string text;
+
         public ClipboardItemControl(string t, int FLPHeight, int FLPWidth)
         {
-            text = t;
+            text = t.Trim(); // Trim any leading or trailing whitespace/newline characters
             flowLayoutPanelHeight = FLPHeight;
             flowLayoutPanelWidth = FLPWidth;
+
             // Set control styles for smooth, flicker-free drawing
             this.SetStyle(ControlStyles.OptimizedDoubleBuffer |
                           ControlStyles.AllPaintingInWmPaint |
@@ -114,9 +117,8 @@ namespace paperClip
 
             // Set basic properties
             this.BackColor = Color.FromArgb(50, 50, 50);  // Dark background
-            //this.Padding = new Padding(15);
-            this.Margin = new Padding(10);
             this.Font = new Font("Segoe UI", 12);
+            this.Padding = new Padding(10);
             SetTextBoxWidth(text);
             setTextBoxHeight(text);
 
@@ -126,32 +128,47 @@ namespace paperClip
             txtBox.ReadOnly = true;
             txtBox.BorderStyle = BorderStyle.None;
             txtBox.Dock = DockStyle.Fill;
-            txtBox.Text = text;
-            //txtBox.Font = new Font("Segoe UI", 12);
             txtBox.ForeColor = Color.White;
             txtBox.BackColor = Color.FromArgb(50, 50, 50); // Match the background color of the UserControl
             txtBox.ScrollBars = ScrollBars.Vertical;
             txtBox.WordWrap = true;
-
+            txtBox.Text = text; // Set the text once
 
             // Add the TextBox to the control
             this.Controls.Add(txtBox);
+            //this.setVScroll();
+
             // Add hover effect for both the UserControl and the TextBox
             this.MouseEnter += (s, e) => this.BackColor = Color.FromArgb(70, 70, 70);
             this.MouseLeave += (s, e) => this.BackColor = Color.FromArgb(50, 50, 50);
             txtBox.MouseEnter += (s, e) => this.BackColor = Color.FromArgb(70, 70, 70);
             txtBox.MouseLeave += (s, e) => this.BackColor = Color.FromArgb(50, 50, 50);
 
-            // Handle click event to copy text back to clipboard
-            //this.Click += (s, e) => Clipboard.SetText(text);
-            //txtBox.Click += (s, e) => Clipboard.SetText(text);
+            // Center the control within the FlowLayoutPanel
+            this.Anchor = AnchorStyles.Top;
+            CenterControl();
         }
 
         private int GetLineCount()
         {
             return txtBox.GetLineFromCharIndex(txtBox.TextLength) + 1;
         }
-        public void SetTextBoxWidth(string text) { 
+
+        private void setVScroll()
+        {
+            int count = GetLineCount();
+            if (count > 2)
+            {
+                txtBox.ScrollBars = ScrollBars.Vertical;
+            }
+            else
+            {
+                txtBox.ScrollBars = ScrollBars.None;
+            }
+        }
+
+        public void SetTextBoxWidth(string text)
+        {
             this.Width = flowLayoutPanelWidth - (int)(flowLayoutPanelWidth * 0.1);
         }
 
@@ -162,13 +179,19 @@ namespace paperClip
                     TextFormatFlags.WordBreak | TextFormatFlags.TextBoxControl).Height;
 
             // Determine the appropriate height for the control
-            textHeight = (textHeight > this.flowLayoutPanelHeight) ? this.flowLayoutPanelHeight - 20 : textHeight + (int)(textHeight * .3);
+            textHeight = (textHeight > this.flowLayoutPanelHeight) ? this.flowLayoutPanelHeight : (textHeight + 20) + (int)(textHeight * .2);
 
             // Set the height of the control
             this.Height = textHeight;
-
-            
         }
 
+        private void CenterControl()
+        {
+            int leftMargin = (flowLayoutPanelWidth - this.Width) / 2;
+            this.Margin = new Padding(leftMargin, 10, 0, 10);
+        }
     }
-}
+
+
+
+    }
