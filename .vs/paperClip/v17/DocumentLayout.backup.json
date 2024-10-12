@@ -7,11 +7,7 @@
       "RelativeMoniker": "D:0:0:{39662481-1A40-4B65-AD73-6B8BF7BED69B}|paperClip\\paperClip.csproj|solutionrelative:paperclip\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{39662481-1A40-4B65-AD73-6B8BF7BED69B}|paperClip\\paperClip.csproj|C:\\Users\\Christian\\dev\\paperClip\\paperclip\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
-      "RelativeMoniker": "D:0:0:{39662481-1A40-4B65-AD73-6B8BF7BED69B}|paperClip\\paperClip.csproj|solutionrelative:paperclip\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{39662481-1A40-4B65-AD73-6B8BF7BED69B}|paperClip\\paperClip.csproj|C:\\Users\\Christian\\dev\\paperClip\\paperclip\\form1.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{39662481-1A40-4B65-AD73-6B8BF7BED69B}|paperClip\\paperClip.csproj|c:\\users\\christian\\dev\\paperclip\\paperclip\\form1.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{39662481-1A40-4B65-AD73-6B8BF7BED69B}|paperClip\\paperClip.csproj|solutionrelative:paperclip\\form1.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
@@ -26,12 +22,8 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 0,
           "Children": [
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{cce594b6-0c39-4442-ba28-10c64ac7e89f}"
-            },
             {
               "$type": "Document",
               "DocumentIndex": 0,
@@ -40,37 +32,31 @@
               "RelativeDocumentMoniker": "paperClip\\Form1.cs",
               "ToolTip": "C:\\Users\\Christian\\dev\\paperClip\\paperClip\\Form1.cs",
               "RelativeToolTip": "paperClip\\Form1.cs",
-              "ViewState": "AgIAAEMAAAAAAAAAAAAmwFQAAAArAAAAAAAAAA==",
+              "ViewState": "AgIAABkAAAAAAAAAAAAmwDQAAAAoAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-11T20:15:11.12Z",
+              "WhenOpened": "2024-10-12T00:46:34.592Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "Form1.cs [Design]",
-              "DocumentMoniker": "C:\\Users\\Christian\\dev\\paperClip\\paperClip\\Form1.cs",
-              "RelativeDocumentMoniker": "paperClip\\Form1.cs",
-              "ToolTip": "C:\\Users\\Christian\\dev\\paperClip\\paperClip\\Form1.cs [Design]",
-              "RelativeToolTip": "paperClip\\Form1.cs [Design]",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-11T20:15:09.432Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
               "Title": "Form1.Designer.cs",
               "DocumentMoniker": "C:\\Users\\Christian\\dev\\paperClip\\paperClip\\Form1.Designer.cs",
               "RelativeDocumentMoniker": "paperClip\\Form1.Designer.cs",
               "ToolTip": "C:\\Users\\Christian\\dev\\paperClip\\paperClip\\Form1.Designer.cs",
               "RelativeToolTip": "paperClip\\Form1.Designer.cs",
-              "ViewState": "AgIAAAIAAAAAAAAAAAAywAkAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAAAkAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-11T20:11:13.89Z"
+              "WhenOpened": "2024-10-11T20:11:13.89Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{cce594b6-0c39-4442-ba28-10c64ac7e89f}"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 2,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\Christian\\dev\\paperClip\\paperClip\\Program.cs",
               "RelativeDocumentMoniker": "paperClip\\Program.cs",
