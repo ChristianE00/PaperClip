@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,15 +17,16 @@ namespace paperClip
     public partial class Form1 : Form
     {
         private SharpClipboard clipboard;
-        //private TextBox clipboardTextBox;
         private FlowLayoutPanel flowLayoutPanel;
         private ArrayList textBoxList = new ArrayList();
 
         public Form1()
         {
             InitializeComponent();
-            Console.WriteLine("Form1");
             this.Load += new EventHandler(Form1_Load);
+            this.Resize += new EventHandler(Form1_Resize); // Add this line
+            this.BackColor = Color.FromArgb(28, 28 , 28); // Dark background
+            //this.FormBorderStyle = FormBorderStyle.None; // No border
 
             // Initialize SharpClipboard
             clipboard = new SharpClipboard();
@@ -36,25 +38,39 @@ namespace paperClip
             flowLayoutPanel.WrapContents = false;
             flowLayoutPanel.AutoScroll = true;
             flowLayoutPanel.Dock = DockStyle.Fill; // Make the panel fill the form
+            flowLayoutPanel.Padding = new Padding(10); // Add padding to the panel
+            flowLayoutPanel.BackColor = Color.FromArgb(30, 30, 30); // Dark background
             this.Controls.Add(flowLayoutPanel);
-            
         }
-        private void CreateNewTextBox(string text)
+        private void Form1_Resize(object sender, EventArgs e)
         {
-            TextBox tBox = new TextBox();
-            tBox.ReadOnly = true;
-            tBox.BorderStyle = BorderStyle.None;
-            tBox.Multiline = true;
-            tBox.WordWrap = true;
-            tBox.ScrollBars = ScrollBars.Vertical;
-            tBox.Width = flowLayoutPanel.ClientSize.Width - 20; // Adjust the width as needed
-            tBox.Height = generateTextBoxHeight(text, tBox); // Set a fixed height for the TextBox
-            tBox.Text = text;
-            tBox.BackColor = Color.Gray;
-            flowLayoutPanel.Controls.Add(tBox);
-            textBoxList.Add(tBox);
-            flowLayoutPanel.Controls.Add(tBox);
+            foreach (Control control in flowLayoutPanel.Controls)
+            {
+                if (control is ClipboardItemControl itemControl)
+                {
+                    itemControl.flowLayoutPanelWidth = flowLayoutPanel.Width;
+                    itemControl.flowLayoutPanelHeight = flowLayoutPanel.Height;
+                    itemControl.SetTextBoxWidth(itemControl.text); // Adjust the width as needed
+                    itemControl.setTextBoxHeight(itemControl.text);
+                }
+            }
+            flowLayoutPanel.PerformLayout();
         }
+
+
+        private void AddClipboardItemControl(string text)
+        {
+            var itemControl = new ClipboardItemControl(text, flowLayoutPanel.ClientSize.Height, flowLayoutPanel.ClientSize.Width);
+
+            flowLayoutPanel.Controls.Add(itemControl);
+
+            // Force the FlowLayoutPanel to update its layout
+            flowLayoutPanel.PerformLayout();
+
+            // Scroll to the latest item
+            flowLayoutPanel.ScrollControlIntoView(itemControl);
+        }
+
 
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -63,29 +79,96 @@ namespace paperClip
 
         }
 
+
         private void ClipboardChanged(object sender, ClipboardChangedEventArgs e)
         {
-            // NOTE: This is not safe for non-text clipboard data
             if (e.ContentType == SharpClipboard.ContentTypes.Text)
             {
                 string clipboardText = clipboard.ClipboardText;
-                CreateNewTextBox(clipboardText);             
+                AddClipboardItemControl(clipboardText);
             }
         }
 
-        private int generateTextBoxHeight(string text, TextBox box)
+
+    }
+
+
+    // Custom
+    public class ClipboardItemControl : UserControl
+    {
+        public TextBox txtBox;
+        public int flowLayoutPanelHeight;
+        public int flowLayoutPanelWidth;
+        public string text;
+        public ClipboardItemControl(string t, int FLPHeight, int FLPWidth)
         {
-            int height = TextRenderer.MeasureText(text, box.Font, new Size(box.Width, 0),
-                    TextFormatFlags.WordBreak | TextFormatFlags.TextBoxControl).Height;
-            height = (height > flowLayoutPanel.ClientSize.Height) ? flowLayoutPanel.ClientSize.Height - 10 : height;
-            return height;
+            text = t;
+            flowLayoutPanelHeight = FLPHeight;
+            flowLayoutPanelWidth = FLPWidth;
+            // Set control styles for smooth, flicker-free drawing
+            this.SetStyle(ControlStyles.OptimizedDoubleBuffer |
+                          ControlStyles.AllPaintingInWmPaint |
+                          ControlStyles.ResizeRedraw |
+                          ControlStyles.UserPaint, true);
+            this.DoubleBuffered = true;
+
+            // Set basic properties
+            this.BackColor = Color.FromArgb(50, 50, 50);  // Dark background
+            //this.Padding = new Padding(15);
+            this.Margin = new Padding(10);
+            this.Font = new Font("Segoe UI", 12);
+            SetTextBoxWidth(text);
+            setTextBoxHeight(text);
+
+            // Initialize the TextBox to display the clipboard text
+            txtBox = new TextBox();
+            txtBox.Multiline = true;
+            txtBox.ReadOnly = true;
+            txtBox.BorderStyle = BorderStyle.None;
+            txtBox.Dock = DockStyle.Fill;
+            txtBox.Text = text;
+            //txtBox.Font = new Font("Segoe UI", 12);
+            txtBox.ForeColor = Color.White;
+            txtBox.BackColor = Color.FromArgb(50, 50, 50); // Match the background color of the UserControl
+            txtBox.ScrollBars = ScrollBars.Vertical;
+            txtBox.WordWrap = true;
+
+
+            // Add the TextBox to the control
+            this.Controls.Add(txtBox);
+            // Add hover effect for both the UserControl and the TextBox
+            this.MouseEnter += (s, e) => this.BackColor = Color.FromArgb(70, 70, 70);
+            this.MouseLeave += (s, e) => this.BackColor = Color.FromArgb(50, 50, 50);
+            txtBox.MouseEnter += (s, e) => this.BackColor = Color.FromArgb(70, 70, 70);
+            txtBox.MouseLeave += (s, e) => this.BackColor = Color.FromArgb(50, 50, 50);
+
+            // Handle click event to copy text back to clipboard
+            //this.Click += (s, e) => Clipboard.SetText(text);
+            //txtBox.Click += (s, e) => Clipboard.SetText(text);
         }
 
-        /*
-        private void Form1_Resize(object sender, EventArgs e)
+        private int GetLineCount()
         {
-            clipboardTextBox.Width = flowLayoutPanel.ClientSize.Width - 20;
+            return txtBox.GetLineFromCharIndex(txtBox.TextLength) + 1;
         }
-        */
+        public void SetTextBoxWidth(string text) { 
+            this.Width = flowLayoutPanelWidth - (int)(flowLayoutPanelWidth * 0.1);
+        }
+
+        public void setTextBoxHeight(string text)
+        {
+            // Calculate the height of the text
+            int textHeight = TextRenderer.MeasureText(text, this.Font, new Size(this.Width, 0),
+                    TextFormatFlags.WordBreak | TextFormatFlags.TextBoxControl).Height;
+
+            // Determine the appropriate height for the control
+            textHeight = (textHeight > this.flowLayoutPanelHeight) ? this.flowLayoutPanelHeight - 20 : textHeight + (int)(textHeight * .3);
+
+            // Set the height of the control
+            this.Height = textHeight;
+
+            
+        }
+
     }
 }
