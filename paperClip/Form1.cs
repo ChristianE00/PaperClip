@@ -19,16 +19,16 @@ namespace paperClip
 {
     public partial class Form1 : Form
     {
-        private SharpClipboard clipboard;
-        private FlowLayoutPanel flowLayoutPanel;
-        private ArrayList textBoxList = new ArrayList();
+        private SharpClipboard _clipboard;
+        private FlowLayoutPanel _flowLayoutPanel;
+        private List<string> _textBoxList;
         private DatabaseHelper _dbHelper;
-        private int clipboardCount;
+        private int _clipboardCount;
 
         public Form1()
         {
 
-            clipboardCount = -1;
+            _clipboardCount = -1;
             InitializeComponent();
 
             // Load database
@@ -43,48 +43,52 @@ namespace paperClip
             //this.FormBorderStyle = FormBorderStyle.None; // No border
 
             // Initialize SharpClipboard
-            clipboard = new SharpClipboard();
-            clipboard.ClipboardChanged += ClipboardChanged;
+            _clipboard = new SharpClipboard();
+            _clipboard.ClipboardChanged += ClipboardChanged;
 
             // Initialize FlowLayoutPanel
-            flowLayoutPanel = new FlowLayoutPanel();
-            flowLayoutPanel.FlowDirection = FlowDirection.TopDown;
-            flowLayoutPanel.WrapContents = false;
-            flowLayoutPanel.AutoScroll = true;
-            flowLayoutPanel.Dock = DockStyle.Fill; // Make the panel fill the form
-            flowLayoutPanel.Padding = new Padding(10); // Add padding to the panel
-            flowLayoutPanel.BackColor = Color.FromArgb(30, 30, 30); // Dark background
-            this.Controls.Add(flowLayoutPanel);
+            _flowLayoutPanel = new FlowLayoutPanel();
+            _flowLayoutPanel.FlowDirection = FlowDirection.TopDown;
+            _flowLayoutPanel.WrapContents = false;
+            _flowLayoutPanel.AutoScroll = true;
+            _flowLayoutPanel.Dock = DockStyle.Fill; // Make the panel fill the form
+            _flowLayoutPanel.Padding = new Padding(10); // Add padding to the panel
+            _flowLayoutPanel.BackColor = Color.FromArgb(30, 30, 30); // Dark background
+            this.Controls.Add(_flowLayoutPanel);
         }
         private void Form1_Resize(object sender, EventArgs e)
         {
-            foreach (Control control in flowLayoutPanel.Controls)
+            foreach (Control control in _flowLayoutPanel.Controls)
             {
                 if (control is ClipboardItemControl itemControl)
                 {
-                    itemControl.flowLayoutPanelWidth = flowLayoutPanel.Width;
-                    itemControl.flowLayoutPanelHeight = flowLayoutPanel.Height;
+                    itemControl.flowLayoutPanelWidth = _flowLayoutPanel.Width;
+                    itemControl.flowLayoutPanelHeight = _flowLayoutPanel.Height;
                     itemControl.SetTextBoxWidth(itemControl.text); // Adjust the width as needed
                     itemControl.setTextBoxHeight(itemControl.text);
                 }
             }
-            flowLayoutPanel.PerformLayout();
+            _flowLayoutPanel.PerformLayout();
         }
 
 
-        private void AddClipboardItemControl(string text)
+        private void AddClipboardItemControl(string text, bool isCache)
         {
-            // NOTE: Position `1` is for testing, this will be updated later
-            _dbHelper.InsertClipboardText(text, 1);
-            var itemControl = new ClipboardItemControl(text, flowLayoutPanel.ClientSize.Height, flowLayoutPanel.ClientSize.Width);
+            if (!isCache)
+            {
+                // NOTE: Position `1` is for testing, this will be updated later
+                _dbHelper.InsertClipboardText(text, 1);
+            }
 
-            flowLayoutPanel.Controls.Add(itemControl);
+            var itemControl = new ClipboardItemControl(text, _flowLayoutPanel.ClientSize.Height, _flowLayoutPanel.ClientSize.Width);
+
+            _flowLayoutPanel.Controls.Add(itemControl);
 
             // Force the FlowLayoutPanel to update its layout
-            flowLayoutPanel.PerformLayout();
+            _flowLayoutPanel.PerformLayout();
 
             // Scroll to the latest item
-            flowLayoutPanel.ScrollControlIntoView(itemControl);
+            _flowLayoutPanel.ScrollControlIntoView(itemControl);
         }
 
 
@@ -92,16 +96,21 @@ namespace paperClip
         {
             // Load the first textbox
            // string clipboardText = Clipboard.GetText();
+           _textBoxList = _dbHelper.GetClipboardText();
+           foreach (string clipboard in _textBoxList)
+           {
+               AddClipboardItemControl(clipboard, true);
+           }
         }
 
 
         private void ClipboardChanged(object sender, ClipboardChangedEventArgs e)
         {
-            ++clipboardCount;
-            if (e.ContentType == SharpClipboard.ContentTypes.Text && clipboardCount > 0)
+            ++_clipboardCount;
+            if (e.ContentType == SharpClipboard.ContentTypes.Text && _clipboardCount > 0)
             {
-                string clipboardText = clipboard.ClipboardText;
-                AddClipboardItemControl(clipboardText);
+                string clipboardText = _clipboard.ClipboardText;
+                AddClipboardItemControl(clipboardText, false);
             }
         }
 
