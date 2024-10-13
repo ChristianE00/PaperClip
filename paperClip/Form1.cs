@@ -153,6 +153,18 @@ namespace paperClip
         public int flowLayoutPanelHeight;
         public int flowLayoutPanelWidth;
         public string text;
+        
+        // Click even handler
+        private void TextBox_Click(object sender, EventArgs e)
+        {
+            TextBox textBox = sender as TextBox;
+            if (textBox != null)
+            {
+                // Handle the click event
+                Clipboard.SetText(textBox.Text);
+                //MessageBox.Show($"TextBox clicked: {textBox.Text}");
+            }
+        }
 
         public ClipboardItemControl(string t, int FLPHeight, int FLPWidth)
         {
@@ -185,6 +197,9 @@ namespace paperClip
             txtBox.ScrollBars = ScrollBars.Vertical;
             txtBox.WordWrap = true;
             txtBox.Text = text; // Set the text once
+            
+            // attaching the click event handler
+            txtBox.Click += TextBox_Click;
 
             // Add the TextBox to the control
             this.Controls.Add(txtBox);
