@@ -55,6 +55,14 @@ namespace paperClip
             _flowLayoutPanel.Padding = new Padding(10); // Add padding to the panel
             _flowLayoutPanel.BackColor = Color.FromArgb(30, 30, 30); // Dark background
             this.Controls.Add(_flowLayoutPanel);
+            
+            // Initialize Clear History Button
+            Button clearHistoryButton = new Button();
+            clearHistoryButton.Text = "Clear History";
+            clearHistoryButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            clearHistoryButton.Location = new Point(this.ClientSize.Width - clearHistoryButton.Width - 20, 10);
+            clearHistoryButton.Click += ClearHistoryButton_Click;
+            this.Controls.Add(clearHistoryButton);
         }
         private void Form1_Resize(object sender, EventArgs e)
         {
@@ -97,10 +105,16 @@ namespace paperClip
             // Load the first textbox
            // string clipboardText = Clipboard.GetText();
            _textBoxList = _dbHelper.GetClipboardText();
-           foreach (string clipboard in _textBoxList)
+           for (int i = _textBoxList.Count() - 1; i >= 0; i--)
            {
-               AddClipboardItemControl(clipboard, true);
+               AddClipboardItemControl(_textBoxList[i], true);
            }
+        }
+        
+        private void ClearHistoryButton_Click(object sender, EventArgs e)
+        {
+            _flowLayoutPanel.Controls.Clear();
+            _dbHelper.ClearClipboardHistory();
         }
 
 
@@ -314,6 +328,26 @@ namespace paperClip
             }
 
             return clipboardTexts;
+        }
+        
+        // A method to clear all clipboard history
+        public void ClearClipboardHistory()
+        {
+            string connectionString = $"Data Source={_dbFilePath};version=3;";
+
+            using (var connection = new SQLiteConnection(connectionString))
+            {
+                connection.Open();
+
+                string deleteQuery = @"
+                    DELETE FROM ClipboardHistory
+                ";
+
+                using (var command = new SQLiteCommand(deleteQuery, connection))
+                {
+                    command.ExecuteNonQuery();
+                }
+            }
         }
         
     }
