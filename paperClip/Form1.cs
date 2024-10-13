@@ -22,6 +22,7 @@ namespace paperClip
         private SharpClipboard _clipboard;
         private FlowLayoutPanel _flowLayoutPanel;
         private List<string> _textBoxList;
+        private Dictionary<string, ClipboardItemControl> _textBoxDict;
         private DatabaseHelper _dbHelper;
         private int _clipboardCount;
 
@@ -35,6 +36,9 @@ namespace paperClip
             _dbHelper = new DatabaseHelper("ClipboardHistory.db");
             _dbHelper.CreateDatabase();
             _dbHelper.CreateTables();
+            
+            // Initialize cache
+            _textBoxDict = new Dictionary<string, ClipboardItemControl>();
             
             this.Load += new EventHandler(Form1_Load);
             this.Resize += new EventHandler(Form1_Resize); // Add this line
@@ -82,14 +86,23 @@ namespace paperClip
 
         private void AddClipboardItemControl(string text, bool isCache)
         {
+            text = text.Trim();
+            if (_textBoxDict.ContainsKey(text))
+            {
+                return;
+            }
             if (!isCache)
             {
                 // NOTE: Position `1` is for testing, this will be updated later
                 _dbHelper.InsertClipboardText(text, 1);
+
             }
-
+            
             var itemControl = new ClipboardItemControl(text, _flowLayoutPanel.ClientSize.Height, _flowLayoutPanel.ClientSize.Width);
-
+            
+            // Save to caches
+            _textBoxDict.Add(text, itemControl);
+            
             _flowLayoutPanel.Controls.Add(itemControl);
 
             // Force the FlowLayoutPanel to update its layout
@@ -97,6 +110,7 @@ namespace paperClip
 
             // Scroll to the latest item
             _flowLayoutPanel.ScrollControlIntoView(itemControl);
+
         }
 
 
