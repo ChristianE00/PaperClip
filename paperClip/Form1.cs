@@ -23,10 +23,12 @@ namespace paperClip
         private FlowLayoutPanel flowLayoutPanel;
         private ArrayList textBoxList = new ArrayList();
         private DatabaseHelper _dbHelper;
+        private int clipboardCount;
 
         public Form1()
         {
 
+            clipboardCount = -1;
             InitializeComponent();
 
             // Load database
@@ -72,6 +74,8 @@ namespace paperClip
 
         private void AddClipboardItemControl(string text)
         {
+            // NOTE: Position `1` is for testing, this will be updated later
+            _dbHelper.InsertClipboardText(text, 1);
             var itemControl = new ClipboardItemControl(text, flowLayoutPanel.ClientSize.Height, flowLayoutPanel.ClientSize.Width);
 
             flowLayoutPanel.Controls.Add(itemControl);
@@ -87,14 +91,14 @@ namespace paperClip
         private void Form1_Load(object sender, EventArgs e)
         {
             // Load the first textbox
-            string clipboardText = Clipboard.GetText();
-
+           // string clipboardText = Clipboard.GetText();
         }
 
 
         private void ClipboardChanged(object sender, ClipboardChangedEventArgs e)
         {
-            if (e.ContentType == SharpClipboard.ContentTypes.Text)
+            ++clipboardCount;
+            if (e.ContentType == SharpClipboard.ContentTypes.Text && clipboardCount > 0)
             {
                 string clipboardText = clipboard.ClipboardText;
                 AddClipboardItemControl(clipboardText);
@@ -246,7 +250,7 @@ namespace paperClip
             }
 
         }
-
+        // A method to insert clipboard text into the database
         public void InsertClipboardText(string clipboardTest, int position)
         {
             string connectionString = $"Data Source={_dbFilePath};version=3;";
@@ -271,6 +275,38 @@ namespace paperClip
             }
 
         }
+        
+        // A method to get all clipboard text from the "ClipboardHistory" table
+        public List<string> GetClipboardText()
+        {
+            List<string> clipboardTexts = new List<string>();
+            string connectionString = $"Data Source={_dbFilePath};version=3;";
+
+            using (var connection = new SQLiteConnection(connectionString))
+            {
+                connection.Open();
+
+                string selectQuery = @"
+                    SELECT ClipboardText
+                    FROM ClipboardHistory
+                    ORDER BY DateTimeCopied DESC
+                ";
+
+                using (var command = new SQLiteCommand(selectQuery, connection))
+                {
+                    using (var reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            clipboardTexts.Add(reader["ClipboardText"].ToString());
+                        }
+                    }
+                }
+            }
+
+            return clipboardTexts;
+        }
+        
     }
 
 }
