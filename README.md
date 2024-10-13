@@ -11,4 +11,4 @@ Note, this application is still in progress. The current version does not work.
 - [x] Implement "click to copy" functionality
 - [ ] Detect & Remove duplicate entries
 - [ ] Create pinned items list
-- [ ] Implement data persistence using SQLite database
+- [x] Implement data persistence using SQLite database
